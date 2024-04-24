@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bebas_neue.variable}`}>{children}</body>
+      <body className={`${bebas_neue.variable} bg-background`}>{children}</body>
     </html>
   );
 }
