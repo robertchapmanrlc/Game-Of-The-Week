@@ -1,0 +1,22 @@
+name: Test Merge Changes
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test_pull_request_changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.2
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: Install dependencies
+        run: pnpm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - run: pnpm build
