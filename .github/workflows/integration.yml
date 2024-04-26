@@ -1,4 +1,6 @@
 name: Test Merge Changes
+env:
+  POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
 
 on:
   pull_request:
