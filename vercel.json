@@ -2,7 +2,8 @@
     "git": {
         "deploymentEnabled": {
             "database": false,
-            "layout": false
+            "layout": false,
+            "vote": false
         }
     }
 }
