@@ -1,5 +1,4 @@
 import { getGames } from "@/server/queries";
-import Game from "./components/game";
 import Games from "./components/games";
 
 export default async function Home() {
