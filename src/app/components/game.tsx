@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type Game = {
   name: string;
@@ -9,14 +9,22 @@ type Game = {
   image: string;
 };
 
-export default function Game({ game, id }: { game: Game; id: number }) {
-
+export default function Game({
+  game,
+  id,
+  voted,
+  onClick,
+}: {
+  game: Game;
+  id: number;
+  voted: boolean;
+  onClick: (v: boolean) => void;
+}) {
   const [votes, setVotes] = useState(game.votes);
-  const [voted, setVoted] = useState(false);
 
   const handleClick = () => {
     setVotes((vote) => vote + 1);
-    setVoted(true);
+    onClick(true);
   };
 
   return (
