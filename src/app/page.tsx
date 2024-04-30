@@ -1,7 +1,16 @@
+import { auth } from "@clerk/nextjs/server";
+
 import { getGames } from "@/server/queries";
 import Games from "./components/games";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
+
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect('/sign-in');
+  }
 
   const games = await getGames();
 
