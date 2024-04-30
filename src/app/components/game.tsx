@@ -15,8 +15,6 @@ export default async function Game({
   id: number;
   }) {
   
-  console.log(game.votes);
-
   return (
     <li className="flex flex-col items-center gap-y-5 md:gap-y-8">
       <Image
