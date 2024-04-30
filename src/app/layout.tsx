@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { Bebas_Neue } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, UserButton } from "@clerk/nextjs";
 
 import "./globals.css";
 
 const bebas_neue = Bebas_Neue({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-bebas-neue',
-  weight: '400'
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-bebas-neue",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${bebas_neue.variable} bg-background`}>{children}</body>
+        <body className={`${bebas_neue.variable} bg-background`}>
+          <div className="absolute right-4 top-4">
+            <UserButton />
+          </div>
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
