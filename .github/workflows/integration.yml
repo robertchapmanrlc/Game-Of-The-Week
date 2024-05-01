@@ -1,6 +1,7 @@
 name: Test Merge Changes
 env:
   POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
 on:
   pull_request:
