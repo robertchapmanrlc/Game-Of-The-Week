@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { games } from "./db/schema";
+import { games, users } from "./db/schema";
 import { auth } from "@clerk/nextjs/server";
 
 export async function getGames() {
@@ -23,5 +23,6 @@ export async function registerVote(count: number, name: string) {
   }
 
   await db.update(games).set({ votes: count + 1 }).where(eq(games.name, name));
+  await db.insert(users).values({ userId: userId, voted: true });
 }
 
