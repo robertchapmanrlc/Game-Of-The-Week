@@ -26,3 +26,22 @@ export async function registerVote(count: number, name: string) {
   await db.insert(users).values({ userId: userId, voted: true });
 }
 
+export async function getVoted(id: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw Error("Unauthorized");
+  }
+
+  if (id !== userId) {
+    throw Error("Invalid user id");
+  }
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.userId, id)
+  });
+
+  return user?.voted;
+
+}
+
