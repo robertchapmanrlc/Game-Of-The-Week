@@ -29,7 +29,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
         alt={`Game ${id}`}
         priority
       />
-      {!voted && (
+      {(!voted && game.winner == undefined) && (
         <form
           className="w-full"
           action={async () => {
@@ -45,7 +45,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
           </button>
         </form>
       )}
-      {voted && (
+      {(voted || game.winner != undefined) && (
         <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
           {game.votes}
         </div>
