@@ -23,6 +23,11 @@ export default async function Home() {
         Game of the Week
       </h1>
       <Games games={games} over={over} />
+      {over && games[0].votes === games[1].votes && (
+        <h3 className="text-text font-bebasneue text-lg md:text-xl lg:text-3xl">
+          Seems there is a tie...
+        </h3>
+      )}
     </main>
   );
 }
