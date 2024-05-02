@@ -15,6 +15,7 @@ export const games = pgTable(
     name: text("name").notNull(),
     image: text("image").notNull(),
     votes: integer("votes").notNull().default(0),
+    dueDate: timestamp("dueDate"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (games) => {
