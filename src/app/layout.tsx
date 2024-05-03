@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     telephone: false,
     url: false
   },
+  icons: {
+    icon: '/gotw-icon.ico'
+  }
 };
 
 export default function RootLayout({
