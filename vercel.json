@@ -3,7 +3,8 @@
         "deploymentEnabled": {
             "database": false,
             "layout": false,
-            "vote": false
+            "vote": false,
+            "metadata": false
         }
     }
 }
