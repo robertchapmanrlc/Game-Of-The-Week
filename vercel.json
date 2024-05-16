@@ -1,0 +1,10 @@
+{
+    "git": {
+        "deploymentEnabled": {
+            "database": false,
+            "layout": false,
+            "vote": false,
+            "metadata": false
+        }
+    }
+}

@@ -1,48 +1,35 @@
-import Image from "next/image";
+import { auth } from "@clerk/nextjs/server";
+import { SignedOut, SignInButton } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+
+  const { userId } = auth();
+
+  if (userId) {
+    redirect("/voting");
+  }
+
   return (
     <main className="w-full sm:py-20 md:py-10 lg:py-5 flex flex-col items-center justify-center gap-y-5 px-8">
       <h1 className="text-text font-bebasneue text-3xl md:text-5xl lg:text-7xl">
         Game of the Week
       </h1>
-      <div className="w-full flex justify-center gap-x-10">
-        <div className="flex flex-col items-center gap-y-5 md:gap-y-8">
-          <Image
-            className="rounded-xl"
-            src={"https://i.ibb.co/HTLzWRx/Tears-Of-The-Kingdom.webp"}
-            width={425}
-            height={500}
-            alt="Game 1"
-          />
-          <button
-            data-testid="Game 1 Vote"
-            className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text font-bebasneue bg-primary rounded-md hover:scale-105 transition-transform"
+      <div className="flex flex-col justify-center items-center gap-y-10">
+        <h2 className="text-gray-400 font-bebasneue text-center text-sm md:text-xl lg:text-2xl">
+          Not quite game of the year, but there is still value in being game of
+          the week right?
+        </h2>
+        <SignedOut>
+          <SignInButton
+            forceRedirectUrl="/voting"
+            signUpFallbackRedirectUrl="/voting"
           >
-            Vote
-          </button>
-          <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
-            The Legend of Zelda: Tears of the Kingdom
-          </h3>
-        </div>
-        <div className="flex flex-col items-center gap-y-5 md:gap-y-8">
-          <Image
-            className="rounded-xl"
-            src={"https://i.ibb.co/jVy7z9S/Persona5-Royal.webp"}
-            width={425}
-            height={500}
-            alt="Game 2"
-          />
-          <button
-            data-testid="Game 2 Vote"
-            className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text font-bebasneue bg-primary rounded-md hover:scale-105 transition-transform"
-          >
-            Vote
-          </button>
-          <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
-            Persona 5 Royal
-          </h3>
-        </div>
+            <button className="w-24 bg-primary p-2 rounded-md text-text">
+              Sign In
+            </button>
+          </SignInButton>
+        </SignedOut>
       </div>
     </main>
   );
