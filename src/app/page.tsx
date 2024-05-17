@@ -1,3 +1,5 @@
+import { getPlaceHolderImage } from "@/utils/images";
+
 import { auth } from "@clerk/nextjs/server";
 import { SignedOut, SignInButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
