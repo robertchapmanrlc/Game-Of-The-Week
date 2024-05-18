@@ -5,7 +5,7 @@ import { SignedOut, SignInButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
-const images = [
+const IMAGE_LINKS = [
   "https://i.ibb.co/mRjLMRw/princess-peach-showtime.webp",
   "https://i.ibb.co/HN2Jcht/final-fantasy-VII-rebirth.webp",
   "https://i.ibb.co/82QXtfh/tekken-8.webp",
@@ -24,7 +24,7 @@ export default async function Home() {
   }
 
   const imagesWithPlaceholders = await Promise.all(
-    images.map(async (src: string) => {
+    IMAGE_LINKS.map(async (src: string) => {
       const imageWithPlaceholder = await getPlaceHolderImage(src);
       return imageWithPlaceholder;
     })
