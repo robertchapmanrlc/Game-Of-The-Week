@@ -2,6 +2,7 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { getVoted, registerVote } from "@/server/queries";
 import { redirect } from "next/navigation";
+import { getPlaceHolderImage } from "@/utils/images";
 
 type Game = {
   name: string;
@@ -19,14 +20,18 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
 
   const voted = await getVoted(userId);
 
+  const imageWithPlaceholder = await getPlaceHolderImage(game.image);
+
   return (
     <li className="flex flex-col items-center gap-y-5 md:gap-y-8">
       <Image
         className={`rounded-xl ${game.winner != undefined && !game.winner && 'grayscale'}`}
-        src={`${game.image}`}
+        src={imageWithPlaceholder.src}
         width={425}
         height={500}
         alt={`Game ${id}`}
+        placeholder='blur'
+        blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
       {(!voted && game.winner == undefined) && (
