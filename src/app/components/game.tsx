@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getVoted, registerVote } from "@/server/queries";
 import { redirect } from "next/navigation";
 import { getPlaceHolderImage } from "@/utils/images";
+import clsx from "clsx";
 
 type Game = {
   name: string;
@@ -25,16 +26,19 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
   return (
     <li className="flex flex-col items-center gap-y-5 md:gap-y-8">
       <Image
-        className={`rounded-xl aspect-square object-cover ${game.winner != undefined && !game.winner && 'grayscale'}`}
+        className={clsx(
+          "rounded-xl aspect-square object-cover",
+          game.winner != undefined && !game.winner && "grayscale"
+        )}
         src={imageWithPlaceholder.src}
         width={400}
         height={400}
         alt={`Game ${id}`}
-        placeholder='blur'
+        placeholder="blur"
         blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
-      {(!voted && game.winner == undefined) && (
+      {!voted && game.winner == undefined && (
         <form
           className="w-full"
           action={async () => {
