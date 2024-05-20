@@ -4,6 +4,7 @@ import { getVoted, registerVote } from "@/server/queries";
 import { redirect } from "next/navigation";
 import { getPlaceHolderImage } from "@/utils/images";
 import clsx from "clsx";
+import VotingForm from "./voteForm";
 
 type Game = {
   name: string;
@@ -39,20 +40,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
         priority
       />
       {!voted && game.winner == undefined && (
-        <form
-          className="w-full"
-          action={async () => {
-            "use server";
-            await registerVote(game.votes, game.name);
-          }}
-        >
-          <button
-            data-testid={`Game ${id} Vote`}
-            className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text font-bebasneue bg-primary rounded-md hover:scale-105 transition-transform disabled:bg-accent disabled:hover:scale-100"
-          >
-            Vote
-          </button>
-        </form>
+        <VotingForm currentVotes={game.votes} name={game.name} />
       )}
       {(voted || game.winner != undefined) && (
         <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">

@@ -3,6 +3,7 @@ import { db } from "./db";
 import { eq } from "drizzle-orm";
 import { games, users } from "./db/schema";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export async function getGames() {
   const { userId } = auth();
@@ -19,11 +20,13 @@ export async function registerVote(count: number, name: string) {
   const { userId } = auth();
 
   if (!userId) {
-    throw Error("Unauthorized");
+    throw new Error("Unauthorized");
   }
 
   await db.update(games).set({ votes: count + 1 }).where(eq(games.name, name));
   await db.insert(users).values({ userId: userId, voted: true });
+
+  redirect('/voting');
 }
 
 export async function getVoted(id: string) {
