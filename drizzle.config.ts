@@ -3,10 +3,10 @@ import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
   schema: "./src/server/db/schema.ts",
-  driver: "pg",
+  dialect: "postgresql",
   out: "./drizzle",
   dbCredentials: {
-    connectionString: process.env.POSTGRES_URL!,
+    url: process.env.POSTGRES_URL!,
   },
   tablesFilter: ["game-of-the-week-postgres"],
 });
