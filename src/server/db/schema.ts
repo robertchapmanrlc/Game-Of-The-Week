@@ -13,8 +13,8 @@ export const elections = pgTable("elections", {
   name: text("name").notNull(),
   start_date: date("start_date", { mode: "date" }).notNull(),
   end_date: date("end_date", { mode: "date" }).notNull(),
-  game1_id: integer('game1_id').references(() => games.game_id),
-  game2_id: integer('game2_id').references(() => games.game_id),
+  game1_id: integer('game1_id').notNull().references(() => games.game_id),
+  game2_id: integer('game2_id').notNull().references(() => games.game_id),
   created_at: timestamp("created_at", { mode: "string" }).defaultNow(),
 });
 

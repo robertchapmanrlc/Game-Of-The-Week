@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
-import { games, users } from "./db/schema";
+import { eq, lte, gte, and } from "drizzle-orm";
+import { elections, games } from "./db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -9,11 +9,48 @@ export async function getGames() {
   const { userId } = auth();
 
   if (!userId) {
-    throw Error('Unauthorized');
+    throw new Error("Unauthorized");
   }
 
-  const games = await db.query.games.findMany({ orderBy: (model, { desc }) => desc(model.id)});
-  return games;
+  try {
+    const res = await fetch(
+      "http://worldtimeapi.org/api/timezone/America/New_York"
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch date data");
+
+    const data = await res.json();
+    const date = new Date(data.datetime);
+
+    const [currentElection] = await db
+      .select()
+      .from(elections)
+      .where(
+        and(lte(elections.start_date, date), gte(elections.end_date, date))
+      )
+      .limit(1);
+
+    if (!currentElection) {
+      return new Error("No current election found");
+    }
+
+    const [game1, game2] = await Promise.all([
+      db
+        .select()
+        .from(games)
+        .where(eq(games.game_id, currentElection.game1_id))
+        .limit(1),
+      db
+        .select()
+        .from(games)
+        .where(eq(games.game_id, currentElection.game2_id))
+        .limit(1),
+    ]);
+
+    return [game1[0], game2[0]];
+  } catch (error) {
+    return [];
+  }
 }
 
 export async function registerVote(count: number, name: string) {
@@ -23,10 +60,13 @@ export async function registerVote(count: number, name: string) {
     throw new Error("Unauthorized");
   }
 
-  await db.update(games).set({ votes: count + 1 }).where(eq(games.name, name));
+  await db
+    .update(games)
+    .set({ votes: count + 1 })
+    .where(eq(games.name, name));
   await db.insert(users).values({ userId: userId, voted: true });
 
-  redirect('/voting');
+  redirect("/voting");
 }
 
 export async function getVoted(id: string) {
@@ -41,10 +81,8 @@ export async function getVoted(id: string) {
   }
 
   const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.userId, id)
+    where: (users, { eq }) => eq(users.userId, id),
   });
 
   return user?.voted;
-
 }
-
