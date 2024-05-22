@@ -12,45 +12,41 @@ export async function getGames() {
     throw new Error("Unauthorized");
   }
 
-  try {
-    const res = await fetch(
-      "http://worldtimeapi.org/api/timezone/America/New_York"
-    );
+  const res = await fetch(
+    "http://worldtimeapi.org/api/timezone/America/New_York"
+  );
 
-    if (!res.ok) throw new Error("Failed to fetch date data");
+  if (!res.ok) throw new Error("Failed to fetch date data");
 
-    const data = await res.json();
-    const date = new Date(data.datetime);
+  const data = await res.json();
+  const date = new Date("2024-05-25T19:05:57.879529-04:00");
 
-    const [currentElection] = await db
-      .select()
-      .from(elections)
-      .where(
-        and(lte(elections.start_date, date), gte(elections.end_date, date))
-      )
-      .limit(1);
+  const [currentElection] = await db
+    .select()
+    .from(elections)
+    .where(and(lte(elections.start_date, date), gte(elections.end_date, date)))
+    .limit(1);
 
-    if (!currentElection) {
-      return new Error("No current election found");
-    }
-
-    const [game1, game2] = await Promise.all([
-      db
-        .select()
-        .from(games)
-        .where(eq(games.game_id, currentElection.game1_id))
-        .limit(1),
-      db
-        .select()
-        .from(games)
-        .where(eq(games.game_id, currentElection.game2_id))
-        .limit(1),
-    ]);
-
-    return [game1[0], game2[0]];
-  } catch (error) {
-    return [];
+  if (!currentElection) {
+    throw new Error("No current election found");
   }
+
+  const [game1, game2] = await Promise.all([
+    db
+      .select()
+      .from(games)
+      .where(eq(games.game_id, currentElection.game1_id))
+      .limit(1),
+    db
+      .select()
+      .from(games)
+      .where(eq(games.game_id, currentElection.game2_id))
+      .limit(1),
+  ]);
+
+  let currentGames = [game1[0], game2[0]];
+
+  return { election: currentElection, games: currentGames };
 }
 
 export async function registerVote(count: number, name: string) {

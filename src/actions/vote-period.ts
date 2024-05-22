@@ -1,11 +1,6 @@
-type Game = {
-  name: string;
-  votes: number;
-  image: string;
-  dueDate: Date | null;
-};
 
-export async function votingOver(game: Game) {
+
+export async function votingOver(end_date: Date) {
   const res = await fetch(
     "http://worldtimeapi.org/api/timezone/America/New_York"
   );
@@ -15,7 +10,7 @@ export async function votingOver(game: Game) {
   const data = await res.json();
 
   const date = new Date(data.datetime).getTime();
-  const dueDate = game.dueDate!.getTime();
+  const dueDate = new Date(end_date).getTime();
 
   return date > dueDate;
 }
