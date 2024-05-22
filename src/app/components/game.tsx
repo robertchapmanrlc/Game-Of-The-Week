@@ -7,10 +7,9 @@ import clsx from "clsx";
 import VotingForm from "./voteForm";
 
 type Game = {
-  name: string;
-  votes: number;
+  title: string;
+  votes_count: number;
   image: string;
-  winner?: boolean;
 };
 
 export default async function Game({ game, id }: { game: Game; id: number }) {
@@ -20,7 +19,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
     redirect("/");
   }
 
-  const voted = await getVoted(userId);
+  // const voted = await getVoted(userId);
 
   const imageWithPlaceholder = await getPlaceHolderImage(game.image);
 
@@ -29,7 +28,6 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
       <Image
         className={clsx(
           "rounded-xl aspect-square object-cover",
-          game.winner != undefined && !game.winner && "grayscale"
         )}
         src={imageWithPlaceholder.src}
         width={400}
