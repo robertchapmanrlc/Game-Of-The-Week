@@ -1,34 +1,32 @@
 import Game from "./game";
 
 type Game = {
-  name: string;
-  votes: number;
+  title: string;
+  votes_count: number;
   image: string;
-  winner?: boolean;
+  game_id: number
 };
 
 export default function Games({
   games,
   over,
+  electionId,
 }: {
   games: Game[];
   over: boolean;
+  electionId: number;
 }) {
-  let processedGames: Game[] = [];
-
-  games.forEach((game, i) => {
-    if (over)
-      processedGames.push({
-        ...game,
-        winner: games[i].votes > games[games.length - 1 - i].votes,
-      });
-    else processedGames.push(game);
-  });
-
   return (
     <ul className="w-full flex justify-center gap-x-10">
-      {processedGames.map((game, i) => (
-        <Game key={i} game={game} id={i + 1} />
+      {games.map((game, i) => (
+        <Game
+          key={i}
+          game={game}
+          id={i + 1}
+          over={over}
+          won={games[i].votes_count > games[1 - i].votes_count && over}
+          electionId={electionId}
+        />
       ))}
     </ul>
   );

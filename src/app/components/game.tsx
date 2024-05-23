@@ -7,13 +7,25 @@ import clsx from "clsx";
 import VotingForm from "./voteForm";
 
 type Game = {
-  name: string;
-  votes: number;
+  title: string;
+  votes_count: number;
   image: string;
-  winner?: boolean;
+  game_id: number;
 };
 
-export default async function Game({ game, id }: { game: Game; id: number }) {
+export default async function Game({
+  game,
+  id,
+  over,
+  won,
+  electionId,
+}: {
+  game: Game;
+  id: number;
+  over: boolean;
+  won: boolean;
+  electionId: number;
+}) {
   const { userId } = auth();
 
   if (!userId) {
@@ -29,7 +41,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
       <Image
         className={clsx(
           "rounded-xl aspect-square object-cover",
-          game.winner != undefined && !game.winner && "grayscale"
+          !won && over && "grayscale"
         )}
         src={imageWithPlaceholder.src}
         width={400}
@@ -39,17 +51,21 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
         blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
-      {!voted && game.winner == undefined && (
-        <VotingForm currentVotes={game.votes} name={game.name} />
+      {!voted && !over && (
+        <VotingForm
+          currentVotes={game.votes_count}
+          game_id={game.game_id}
+          electionId={electionId}
+        />
       )}
-      {(voted || game.winner != undefined) && (
+      {(voted || over) && (
         <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
-          {game.votes}
+          {game.votes_count}
         </div>
       )}
       <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
-        {game.name}
-        {game.winner && <p>Wins</p>}
+        {game.title}
+        {won && <p>Wins</p>}
       </h3>
     </li>
   );
