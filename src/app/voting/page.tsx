@@ -24,7 +24,7 @@ export default async function Home() {
       </h1>
       <Games games={games} over={over} electionId={election.election_id} />
       {over && games[0].votes_count === games[1].votes_count && (
-        <h3 className="text-text font-bebasneue text-lg md:text-xl lg:text-3xl">
+        <h3 className="text-text font-opensans text-lg md:text-xl lg:text-3xl">
           Seems there is a tie...
         </h3>
       )}

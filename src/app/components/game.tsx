@@ -59,11 +59,11 @@ export default async function Game({
         />
       )}
       {(voted || over) && (
-        <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
+        <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-opensans bg-accent rounded-md">
           {game.votes_count}
         </div>
       )}
-      <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
+      <h3 className="text-text text-center text-md md:text-xl lg:text-3xl font-opensans">
         {game.title}
         {won && <p>Wins</p>}
       </h3>

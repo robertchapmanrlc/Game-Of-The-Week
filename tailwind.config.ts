@@ -6,6 +6,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         bebasneue: ["var(--font-bebas-neue)"],
+        opensans: ["var(--font-open-sans)"]
       },
       colors: {
         text: "#ebe9fc",

@@ -36,8 +36,8 @@ export default async function Home() {
         Game of the Week
       </h1>
       <div className="w-full flex flex-col justify-center items-center gap-y-10">
-        <h2 className="text-gray-400 font-bebasneue text-center text-sm md:text-xl lg:text-2xl">
-          Not quite game of the year, but there is still value in being game of
+        <h2 className="text-gray-300 font-opensans text-center text-sm md:text-xl lg:text-2xl">
+          Not quite game of the year, but there&apos;s still value in being game of
           the week right?
         </h2>
         <div className="w-full max-w-5xl h-[400px] md:h-[450px] lg:h-[600px] xl:h-[800px] grid grid-flow-dense grid-cols-12 grid-rows-12 gap-2">
