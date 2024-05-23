@@ -63,7 +63,7 @@ export default async function Game({
           {game.votes_count}
         </div>
       )}
-      <h3 className="text-text text-center text-md md:text-xl lg:text-3xl font-opensans">
+      <h3 className="max-w-80 text-text leading-6 text-center text-md md:text-xl lg:text-3xl font-opensans">
         {game.title}
         {won && <p>Wins</p>}
       </h3>
