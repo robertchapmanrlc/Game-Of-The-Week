@@ -2,15 +2,30 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import { getVoted, registerVote } from "@/server/queries";
 import { redirect } from "next/navigation";
+import { getPlaceHolderImage } from "@/utils/images";
+import clsx from "clsx";
+import VotingForm from "./voteForm";
 
 type Game = {
-  name: string;
-  votes: number;
+  title: string;
+  votes_count: number;
   image: string;
-  winner?: boolean;
+  game_id: number;
 };
 
-export default async function Game({ game, id }: { game: Game; id: number }) {
+export default async function Game({
+  game,
+  id,
+  over,
+  won,
+  electionId,
+}: {
+  game: Game;
+  id: number;
+  over: boolean;
+  won: boolean;
+  electionId: number;
+}) {
   const { userId } = auth();
 
   if (!userId) {
@@ -19,40 +34,38 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
 
   const voted = await getVoted(userId);
 
+  const imageWithPlaceholder = await getPlaceHolderImage(game.image);
+
   return (
     <li className="flex flex-col items-center gap-y-5 md:gap-y-8">
       <Image
-        className={`rounded-xl ${game.winner != undefined && !game.winner && 'grayscale'}`}
-        src={`${game.image}`}
-        width={425}
-        height={500}
+        className={clsx(
+          "rounded-xl aspect-square object-cover",
+          !won && over && "grayscale"
+        )}
+        src={imageWithPlaceholder.src}
+        width={400}
+        height={400}
         alt={`Game ${id}`}
+        placeholder="blur"
+        blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
-      {(!voted && game.winner == undefined) && (
-        <form
-          className="w-full"
-          action={async () => {
-            "use server";
-            await registerVote(game.votes, game.name);
-          }}
-        >
-          <button
-            data-testid={`Game ${id} Vote`}
-            className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text font-bebasneue bg-primary rounded-md hover:scale-105 transition-transform disabled:bg-accent disabled:hover:scale-100"
-          >
-            Vote
-          </button>
-        </form>
+      {!voted && !over && (
+        <VotingForm
+          currentVotes={game.votes_count}
+          game_id={game.game_id}
+          electionId={electionId}
+        />
       )}
-      {(voted || game.winner != undefined) && (
-        <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
-          {game.votes}
+      {(voted || over) && (
+        <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-opensans bg-accent rounded-md">
+          {game.votes_count}
         </div>
       )}
-      <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
-        {game.name}
-        {game.winner && <p>Wins</p>}
+      <h3 className="max-w-80 text-text leading-6 text-center text-md md:text-xl lg:text-3xl font-opensans">
+        {game.title}
+        {won && <p>Wins</p>}
       </h3>
     </li>
   );

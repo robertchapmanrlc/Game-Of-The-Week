@@ -2,6 +2,7 @@
   "name": "game-of-the-week",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,18 +14,20 @@
     "@clerk/nextjs": "^5.0.3",
     "@next/env": "^14.2.3",
     "@vercel/postgres": "^0.8.0",
+    "clsx": "^2.1.1",
     "drizzle-orm": "^0.30.9",
     "next": "14.2.3",
     "pg": "^8.11.5",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.43.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "drizzle-kit": "^0.20.17",
+    "drizzle-kit": "^0.21.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue } from "next/font/google";
+import { Bebas_Neue, Open_Sans } from "next/font/google";
 import { ClerkProvider, UserButton } from "@clerk/nextjs";
 
 import "./globals.css";
@@ -10,6 +10,12 @@ const bebas_neue = Bebas_Neue({
   variable: "--font-bebas-neue",
   weight: "400",
 });
+
+const open_sans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
+  display: 'swap'
+})
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -48,7 +54,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${bebas_neue.variable} bg-background`}>
+        <body className={`${bebas_neue.variable} ${open_sans.variable} bg-background`}>
           <div className="absolute right-4 top-4">
             <UserButton />
           </div>
