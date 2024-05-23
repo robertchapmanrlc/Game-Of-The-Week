@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { eq, lte, gte, and } from "drizzle-orm";
-import { elections, games } from "./db/schema";
+import { elections, games, votes } from "./db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -19,7 +19,7 @@ export async function getGames() {
   if (!res.ok) throw new Error("Failed to fetch date data");
 
   const data = await res.json();
-  const date = new Date("2024-05-25T19:05:57.879529-04:00");
+  const date = new Date(data.datetime);
 
   const [currentElection] = await db
     .select()
@@ -49,18 +49,29 @@ export async function getGames() {
   return { election: currentElection, games: currentGames };
 }
 
-export async function registerVote(count: number, name: string) {
+export async function registerVote(
+  count: number,
+  game_id: number,
+  election_id: number
+) {
   const { userId } = auth();
 
   if (!userId) {
     throw new Error("Unauthorized");
   }
 
-  await db
-    .update(games)
-    .set({ votes: count + 1 })
-    .where(eq(games.name, name));
-  await db.insert(users).values({ userId: userId, voted: true });
+  await db.transaction(async (tx) => {
+    await tx
+      .update(games)
+      .set({ votes_count: count + 1 })
+      .where(eq(games.game_id, game_id));
+
+    await tx.insert(votes).values({
+      user_id: userId,
+      election_id: election_id,
+      game_id: game_id,
+    });
+  });
 
   redirect("/voting");
 }
@@ -76,9 +87,10 @@ export async function getVoted(id: string) {
     throw Error("Invalid user id");
   }
 
-  const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.userId, id),
-  });
+  const user_vote = await db
+    .select()
+    .from(votes)
+    .where(eq(votes.user_id, userId));
 
-  return user?.voted;
+  return user_vote.length === 1;
 }

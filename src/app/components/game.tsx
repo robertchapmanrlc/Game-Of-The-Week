@@ -10,9 +10,22 @@ type Game = {
   title: string;
   votes_count: number;
   image: string;
+  game_id: number;
 };
 
-export default async function Game({ game, id, over, won }: { game: Game; id: number, over: boolean, won: boolean }) {
+export default async function Game({
+  game,
+  id,
+  over,
+  won,
+  electionId,
+}: {
+  game: Game;
+  id: number;
+  over: boolean;
+  won: boolean;
+  electionId: number;
+}) {
   const { userId } = auth();
 
   if (!userId) {
@@ -28,7 +41,7 @@ export default async function Game({ game, id, over, won }: { game: Game; id: nu
       <Image
         className={clsx(
           "rounded-xl aspect-square object-cover",
-          !won && "grayscale"
+          !won && over && "grayscale"
         )}
         src={imageWithPlaceholder.src}
         width={400}
@@ -38,8 +51,12 @@ export default async function Game({ game, id, over, won }: { game: Game; id: nu
         blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
-      {!voted && over && (
-        <VotingForm currentVotes={game.votes_count} name={game.title} />
+      {!voted && !over && (
+        <VotingForm
+          currentVotes={game.votes_count}
+          game_id={game.game_id}
+          electionId={electionId}
+        />
       )}
       {(voted || over) && (
         <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
