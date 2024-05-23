@@ -12,14 +12,14 @@ type Game = {
   image: string;
 };
 
-export default async function Game({ game, id }: { game: Game; id: number }) {
+export default async function Game({ game, id, over, won }: { game: Game; id: number, over: boolean, won: boolean }) {
   const { userId } = auth();
 
   if (!userId) {
     redirect("/");
   }
 
-  // const voted = await getVoted(userId);
+  const voted = await getVoted(userId);
 
   const imageWithPlaceholder = await getPlaceHolderImage(game.image);
 
@@ -28,6 +28,7 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
       <Image
         className={clsx(
           "rounded-xl aspect-square object-cover",
+          !won && "grayscale"
         )}
         src={imageWithPlaceholder.src}
         width={400}
@@ -37,17 +38,17 @@ export default async function Game({ game, id }: { game: Game; id: number }) {
         blurDataURL={imageWithPlaceholder.placeholder}
         priority
       />
-      {!voted && game.winner == undefined && (
-        <VotingForm currentVotes={game.votes} name={game.name} />
+      {!voted && over && (
+        <VotingForm currentVotes={game.votes_count} name={game.title} />
       )}
-      {(voted || game.winner != undefined) && (
+      {(voted || over) && (
         <div className="w-full py-1 md:py-2 text-lg md:text-xl lg:text-3xl text-text text-center font-bebasneue bg-accent rounded-md">
-          {game.votes}
+          {game.votes_count}
         </div>
       )}
       <h3 className="text-text text-center text-lg md:text-xl lg:text-3xl font-bebasneue">
-        {game.name}
-        {game.winner && <p>Wins</p>}
+        {game.title}
+        {won && <p>Wins</p>}
       </h3>
     </li>
   );
